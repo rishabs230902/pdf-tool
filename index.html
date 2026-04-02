@@ -147,6 +147,52 @@ async function jpgToPdf() {
   link.download = 'converted.pdf';
   link.click();
 }
+  async function splitPDF() {
+  const { PDFDocument } = PDFLib;
+  const file = document.getElementById('splitFile').files[0];
+  const pageNumber = parseInt(document.getElementById('pageNumber').value);
+
+  if (!file || !pageNumber) {
+    alert("Select file and enter page number");
+    return;
+  }
+
+  const bytes = await file.arrayBuffer();
+  const pdf = await PDFDocument.load(bytes);
+
+  const totalPages = pdf.getPageCount();
+
+  if (pageNumber < 1 || pageNumber >= totalPages) {
+    alert("Invalid page number");
+    return;
+  }
+
+  // First part
+  const pdf1 = await PDFDocument.create();
+  const pages1 = await pdf1.copyPages(pdf, [...Array(pageNumber).keys()]);
+  pages1.forEach(p => pdf1.addPage(p));
+  const pdfBytes1 = await pdf1.save();
+
+  // Second part
+  const pdf2 = await PDFDocument.create();
+  const pages2 = await pdf2.copyPages(pdf, Array.from({length: totalPages - pageNumber}, (_, i) => i + pageNumber));
+  pages2.forEach(p => pdf2.addPage(p));
+  const pdfBytes2 = await pdf2.save();
+
+  // Download first file
+  const blob1 = new Blob([pdfBytes1], { type: 'application/pdf' });
+  const link1 = document.createElement('a');
+  link1.href = URL.createObjectURL(blob1);
+  link1.download = 'part1.pdf';
+  link1.click();
+
+  // Download second file
+  const blob2 = new Blob([pdfBytes2], { type: 'application/pdf' });
+  const link2 = document.createElement('a');
+  link2.href = URL.createObjectURL(blob2);
+  link2.download = 'part2.pdf';
+  link2.click();
+}
 </script>
 </script>
 
