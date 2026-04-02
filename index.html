@@ -244,71 +244,7 @@ async function jpgToPdf() {
   link.download = 'edited.pdf';
   link.click();
     }
- let canvas = document.getElementById('pdfCanvas');
-let ctx = canvas.getContext('2d');
-let drawing = false;
-let eraseMode = false;
-
-document.getElementById('editorFile').addEventListener('change', async function(e) {
-  const file = e.target.files[0];
-  const fileReader = new FileReader();
-
-  fileReader.onload = async function() {
-    const typedarray = new Uint8Array(this.result);
-
-    const pdf = await pdfjsLib.getDocument(typedarray).promise;
-    const page = await pdf.getPage(1);
-
-    const viewport = page.getViewport({ scale: 1.5 });
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
-    const renderContext = {
-      canvasContext: ctx,
-      viewport: viewport
-    };
-
-    await page.render(renderContext).promise;
-  };
-
-  fileReader.readAsArrayBuffer(file);
-});
-
-canvas.addEventListener('mousedown', () => drawing = true);
-canvas.addEventListener('mouseup', () => {
-  drawing = false;
-  ctx.beginPath();
-});
-
-canvas.addEventListener('mousemove', draw);
-
-function draw(e) {
-  if (!drawing) return;
-
-  ctx.lineWidth = eraseMode ? 20 : 3;
-  ctx.strokeStyle = eraseMode ? "#ffffff" : "#ff0000";
-
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
-}
-
-function enableDraw() {
-  eraseMode = false;
-}
-
-function enableErase() {
-  eraseMode = true;
-}
-
-function downloadEdited() {
-  const link = document.createElement('a');
-  link.download = 'edited.png';
-  link.href = canvas.toDataURL();
-  link.click();
-}
-  let canvas = document.getElementById('pdfCanvas');
+let canvas = document.getElementById('pdfCanvas');
 let ctx = canvas.getContext('2d');
 let drawing = false;
 let eraseMode = false;
