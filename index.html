@@ -79,13 +79,23 @@
   <input type="file" id="splitFile" accept="application/pdf"><br><br>
   <input type="number" id="pageNumber" placeholder="Enter page number"><br><br>
   <button onclick="splitPDF()">Split PDF</button>
-  
 </div>
   <div class="tool">
   <h3>Edit PDF (Add Text)</h3>
   <input type="file" id="editFile" accept="application/pdf"><br><br>
   <input type="text" id="textInput" placeholder="Enter text"><br><br>
   <button onclick="editPDF()">Add Text</button>
+</div>
+  <div class="tool">
+  <h3>Smart PDF Editor ✏️</h3>
+
+  <input type="file" id="editorFile" accept="application/pdf"><br><br>
+
+  <canvas id="pdfCanvas" style="border:1px solid #ccc; max-width:100%;"></canvas><br><br>
+
+  <button onclick="enableDraw()">Draw</button>
+  <button onclick="enableErase()">Erase</button>
+  <button onclick="downloadEdited()">Download</button>
   </div>
 </div>
 
@@ -232,6 +242,59 @@ async function jpgToPdf() {
   link.download = 'edited.pdf';
   link.click();
     }
+ let canvas = document.getElementById('pdfCanvas');
+let ctx = canvas.getContext('2d');
+let drawing = false;
+let eraseMode = false;
+
+document.getElementById('editorFile').addEventListener('change', async function(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function() {
+    let img = new Image();
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+canvas.addEventListener('mousedown', () => drawing = true);
+canvas.addEventListener('mouseup', () => drawing = false);
+
+canvas.addEventListener('mousemove', draw);
+
+function draw(e) {
+  if (!drawing) return;
+
+  ctx.lineWidth = eraseMode ? 20 : 3;
+  ctx.strokeStyle = eraseMode ? "#ffffff" : "#ff0000";
+
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function enableDraw() {
+  eraseMode = false;
+}
+
+function enableErase() {
+  eraseMode = true;
+}
+
+function downloadEdited() {
+  const link = document.createElement('a');
+  link.download = 'edited.png';
+  link.href = canvas.toDataURL();
+  link.click();
+      } 
 </script>
 </script>
 
