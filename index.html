@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Merge PDF Free</title>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body style="text-align:center; font-family:Arial; padding:40px;">
+
+<h1>Merge PDF Online (No Limit 🔒)</h1>
+<p>Your files never leave your device</p>
+
+<input type="file" id="files" multiple accept="application/pdf"><br><br>
+
+<button onclick="merge()">Merge PDFs</button>
+
+<script>
+async function merge() {
+  const { PDFDocument } = PDFLib;
+  const files = document.getElementById('files').files;
+
+  if(files.length < 2){
+    alert("Select at least 2 files");
+    return;
+  }
+
+  const mergedPdf = await PDFDocument.create();
+
+  for (let file of files) {
+    const bytes = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(bytes);
+    const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+    pages.forEach(p => mergedPdf.addPage(p));
+  }
+
+  const mergedBytes = await mergedPdf.save();
+
+  const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'merged.pdf';
+  link.click();
+}
+</script>
+
+</body>
+</html>
