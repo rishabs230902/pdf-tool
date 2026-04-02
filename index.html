@@ -73,7 +73,12 @@
     <input type="file" id="imageFiles" multiple accept="image/*"><br><br>
     <button onclick="jpgToPdf()">Convert to PDF</button>
   </div>
-
+<div class="tool">
+  <h3>Split PDF</h3>
+  <input type="file" id="splitFile" accept="application/pdf"><br><br>
+  <input type="number" id="pageNumber" placeholder="Enter page number"><br><br>
+  <button onclick="splitPDF()">Split PDF</button>
+</div>
 </div>
 
 <script>
