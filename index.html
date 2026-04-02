@@ -1,25 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Free PDF Tools</title>
+  <title>NoLimit PDF Tools</title>
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #f5f7fb;
+      text-align: center;
+    }
+
+    header {
+      background: #4a6cf7;
+      color: white;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    .tool {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    button {
+      background: #4a6cf7;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3a55d1;
+    }
+
+    p {
+      color: #555;
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:Arial; padding:40px;">
 
-<h1>Free PDF Tools (No Limit 🔒)</h1>
-<p>Your files never leave your device</p>
+<body>
 
-<hr>
+<header>NoLimit PDF 🔒</header>
 
-<h2>Merge PDF</h2>
-<input type="file" id="pdfFiles" multiple accept="application/pdf"><br><br>
-<button onclick="mergePDF()">Merge PDFs</button>
+<div class="container">
+  <p>Free PDF tools with no limits. Your files never leave your device.</p>
 
-<hr>
+  <div class="tool">
+    <h3>Merge PDF</h3>
+    <input type="file" id="pdfFiles" multiple accept="application/pdf"><br><br>
+    <button onclick="mergePDF()">Merge PDFs</button>
+  </div>
 
-<h2>JPG to PDF</h2>
-<input type="file" id="imageFiles" multiple accept="image/*"><br><br>
-<button onclick="jpgToPdf()">Convert to PDF</button>
+  <div class="tool">
+    <h3>JPG to PDF</h3>
+    <input type="file" id="imageFiles" multiple accept="image/*"><br><br>
+    <button onclick="jpgToPdf()">Convert to PDF</button>
+  </div>
+
+</div>
 
 <script>
 async function mergePDF() {
