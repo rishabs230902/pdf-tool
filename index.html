@@ -6,6 +6,7 @@
 <meta name="robots" content="index, follow">
   <title>NoLimit PDF Tools</title>
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
   <style>
     body {
@@ -249,23 +250,34 @@ let eraseMode = false;
 
 document.getElementById('editorFile').addEventListener('change', async function(e) {
   const file = e.target.files[0];
-  const reader = new FileReader();
+  const fileReader = new FileReader();
 
-  reader.onload = function() {
-    let img = new Image();
-    img.onload = function() {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+  fileReader.onload = async function() {
+    const typedarray = new Uint8Array(this.result);
+
+    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+    const page = await pdf.getPage(1);
+
+    const viewport = page.getViewport({ scale: 1.5 });
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport
     };
-    img.src = reader.result;
+
+    await page.render(renderContext).promise;
   };
 
-  reader.readAsDataURL(file);
+  fileReader.readAsArrayBuffer(file);
 });
 
 canvas.addEventListener('mousedown', () => drawing = true);
-canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mouseup', () => {
+  drawing = false;
+  ctx.beginPath();
+});
 
 canvas.addEventListener('mousemove', draw);
 
@@ -294,7 +306,72 @@ function downloadEdited() {
   link.download = 'edited.png';
   link.href = canvas.toDataURL();
   link.click();
-      } 
+}
+  let canvas = document.getElementById('pdfCanvas');
+let ctx = canvas.getContext('2d');
+let drawing = false;
+let eraseMode = false;
+
+document.getElementById('editorFile').addEventListener('change', async function(e) {
+  const file = e.target.files[0];
+  const fileReader = new FileReader();
+
+  fileReader.onload = async function() {
+    const typedarray = new Uint8Array(this.result);
+
+    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+    const page = await pdf.getPage(1);
+
+    const viewport = page.getViewport({ scale: 1.5 });
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport
+    };
+
+    await page.render(renderContext).promise;
+  };
+
+  fileReader.readAsArrayBuffer(file);
+});
+
+canvas.addEventListener('mousedown', () => drawing = true);
+canvas.addEventListener('mouseup', () => {
+  drawing = false;
+  ctx.beginPath();
+});
+
+canvas.addEventListener('mousemove', draw);
+
+function draw(e) {
+  if (!drawing) return;
+
+  ctx.lineWidth = eraseMode ? 20 : 3;
+  ctx.strokeStyle = eraseMode ? "#ffffff" : "#ff0000";
+
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function enableDraw() {
+  eraseMode = false;
+}
+
+function enableErase() {
+  eraseMode = true;
+}
+
+function downloadEdited() {
+  const link = document.createElement('a');
+  link.download = 'edited.png';
+  link.href = canvas.toDataURL();
+  link.click();
+  }
+ 
 </script>
 </script>
 
@@ -315,8 +392,7 @@ Fast, secure, and works on all devices.
 
 <h2>About NoLimit PDF</h2>
 <p>
-NoLimit PDF is a free online platform that provides unlimited PDF tools.
-Unlike other websites, we do not upload your files to any server.
+NoLimit PDF is a free online platform that provides unlimited server.
 All processing happens in your browser, ensuring 100% privacy and security.
 </p>
 
