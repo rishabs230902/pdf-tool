@@ -73,37 +73,42 @@ canvas {
 
 <body>
 
-<header>NoLimit PDF 🔒</header>
+<header>
+  NoLimit PDF 🔒  
+  <div style="font-size:14px; margin-top:5px;">
+    No limits • No upload • 100% private
+  </div>
+</header>
   <p><b>No limits • No upload • 100% private 🔒</b></p>
 
 <div class="container">
   <p>Free PDF tools with no limits. Your files never leave your device.</p>
 
   <div class="tool">
-    <h3>Merge PDF</h3>
+    <h3>🌀Merge PDF</h3>
     <input type="file" id="pdfFiles" multiple accept="application/pdf"><br><br>
     <button onclick="mergePDF()">Merge PDFs</button>
   </div>
 
   <div class="tool">
-    <h3>JPG to PDF</h3>
+    <h3>🌐JPG to PDF</h3>
     <input type="file" id="imageFiles" multiple accept="image/*"><br><br>
     <button onclick="jpgToPdf()">Convert to PDF</button>
   </div>
 <div class="tool">
-  <h3>Split PDF</h3>
+  <h3>💔Split PDF</h3>
   <input type="file" id="splitFile" accept="application/pdf"><br><br>
   <input type="number" id="pageNumber" placeholder="Enter page number"><br><br>
   <button onclick="splitPDF()">Split PDF</button>
 </div>
   <div class="tool">
-  <h3>Edit PDF (Add Text)</h3>
+  <h3>💘Edit PDF (Add Text)</h3>
   <input type="file" id="editFile" accept="application/pdf"><br><br>
   <input type="text" id="textInput" placeholder="Enter text"><br><br>
   <button onclick="editPDF()">Add Text</button>
 </div>
   <div class="tool">
-  <h3>Smart PDF Editor ✏️</h3>
+  <h3>👨‍💻Smart PDF Editor ✏️</h3>
 
   <input type="file" id="editorFile" accept="application/pdf"><br><br>
 
@@ -114,7 +119,7 @@ canvas {
   <button onclick="downloadEdited()">Download</button>
   </div>
   <div class="tool">
-  <h3>Resize Image (For Forms)</h3>
+  <h3>✍️Resize Image (For Forms)</h3>
 
   <input type="file" id="resizeImage" accept="image/*"><br><br>
 
@@ -123,7 +128,7 @@ canvas {
   <button onclick="resizeImage()">Compress Image</button>
   </div>
   <div class="tool">
-  <h3>Compress PDF (Basic)</h3>
+  <h3>✊️Compress PDF (Basic)</h3>
 
   <input type="file" id="compressPDFFile" accept="application/pdf"><br><br>
 
