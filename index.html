@@ -337,6 +337,56 @@ function downloadEdited() {
   link.href = canvas.toDataURL();
   link.click();
   }
+  function resizeImage() {
+  const file = document.getElementById('resizeImage').files[0];
+  const targetKB = document.getElementById('targetSize').value;
+
+  if (!file || !targetKB) {
+    alert("Upload image and enter target size");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const img = new Image();
+    img.src = e.target.result;
+
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = img.width;
+      let height = img.height;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      let quality = 0.9;
+
+      function compress() {
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        const sizeKB = Math.round((dataUrl.length * 3) / 4 / 1024);
+
+        if (sizeKB > targetKB && quality > 0.1) {
+          quality -= 0.05;
+          compress();
+        } else {
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = 'compressed.jpg';
+          link.click();
+        }
+      }
+
+      compress();
+    };
+  };
+
+  reader.readAsDataURL(file);
+  }
  
 </script>
 
