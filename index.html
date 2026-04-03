@@ -274,13 +274,33 @@ document.getElementById('editorFile').addEventListener('change', async function(
   fileReader.readAsArrayBuffer(file);
 });
 
+// Mouse (PC)
 canvas.addEventListener('mousedown', () => drawing = true);
 canvas.addEventListener('mouseup', () => {
   drawing = false;
   ctx.beginPath();
 });
-
 canvas.addEventListener('mousemove', draw);
+
+// Touch (Mobile)
+canvas.addEventListener('touchstart', () => drawing = true);
+
+canvas.addEventListener('touchend', () => {
+  drawing = false;
+  ctx.beginPath();
+});
+
+canvas.addEventListener('touchmove', (e) => {
+  e.preventDefault(); // important for smooth drawing
+
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  draw({ offsetX: x, offsetY: y });
+});
 
 function draw(e) {
   if (!drawing) return;
